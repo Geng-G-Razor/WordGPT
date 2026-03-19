@@ -6,7 +6,7 @@ import Container from "./Container";
 import Login from "./Login";
 /* global Word, localStorage, navigator */
 
-const OPENAI_BASE_PATH = "https://coding.dashscope.aliyuncs.com/v1";
+const OPENAI_BASE_PATH = "/api";
 const OPENAI_MODEL = "glm-5";
 
 export default function App() {

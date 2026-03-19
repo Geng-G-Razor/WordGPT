@@ -99,6 +99,16 @@ module.exports = async (env, options) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
+      proxy: {
+        "/api": {
+          target: "https://coding.dashscope.aliyuncs.com",
+          changeOrigin: true,
+          secure: true,
+          pathRewrite: {
+            "^/api": "/v1",
+          },
+        },
+      },
       server: {
         type: "https",
         options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
