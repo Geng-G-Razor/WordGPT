@@ -130,8 +130,8 @@ export default function App() {
             <span className="status-badge">已连接</span>
           </div>
           <TextField
-            className="app-input"
-            placeholder="请输入你的提示词"
+            className="app-input modern-input"
+            placeholder="例如：帮我写一封更专业的英文邮件，语气友好但坚定。"
             value={prompt}
             rows={5}
             multiline={true}
