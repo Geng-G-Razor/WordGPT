@@ -366,13 +366,21 @@ body {
 }
 
 .result-text {
-  margin: 14px 0 0;
+  margin: 0;
   font-size: 14px;
   line-height: 1.9;
   color: #24465f;
   white-space: pre-wrap;
   word-break: break-word;
   text-align: justify;
+}
+
+.result-scroll {
+  margin-top: 14px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scroll-behavior: smooth;
 }
 
 .message-wrap {

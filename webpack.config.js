@@ -21,6 +21,7 @@ module.exports = async (env, options) => {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
       taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
+      streamDebug: ["react-hot-loader/patch", "./src/stream-debug/index.tsx", "./src/stream-debug/stream-debug.html"],
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -90,6 +91,11 @@ module.exports = async (env, options) => {
         template: "./src/commands/commands.html",
         chunks: ["commands"],
       }),
+      new HtmlWebpackPlugin({
+        filename: "stream-debug.html",
+        template: "./src/stream-debug/stream-debug.html",
+        chunks: ["streamDebug", "vendor", "polyfill"],
+      }),
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
@@ -101,7 +107,7 @@ module.exports = async (env, options) => {
       },
       proxy: {
         "/api": {
-          target: "https://coding.dashscope.aliyuncs.com",
+          target: "https://api.siliconflow.cn",
           changeOrigin: true,
           secure: true,
           pathRewrite: {
