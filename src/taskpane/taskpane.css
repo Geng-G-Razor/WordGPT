@@ -344,7 +344,8 @@ body {
     background 160ms ease;
 }
 
-.primary-action {
+.primary-action,
+.primary-action.ms-Button {
   border: none;
   color: #fff;
   background: linear-gradient(135deg, #0c6fbb 0%, #1aa4a2 100%);
@@ -358,10 +359,35 @@ body {
 }
 
 .primary-action:hover,
-.secondary-action:hover {
+.primary-action.ms-Button:hover {
   transform: translateY(-1px);
+  color: #ffffff;
+  background: linear-gradient(135deg, #1695c5 0%, #37b9ad 100%);
+  box-shadow: 0 14px 28px rgba(13, 116, 190, 0.28);
 }
 
-.primary-action:hover {
-  box-shadow: 0 14px 28px rgba(13, 116, 190, 0.28);
+.primary-action:focus,
+.primary-action:active,
+.primary-action.ms-Button:focus,
+.primary-action.ms-Button:active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #1588b4 0%, #31a89f 100%);
+  box-shadow:
+    0 0 0 3px rgba(178, 233, 241, 0.24),
+    0 12px 24px rgba(13, 116, 190, 0.22);
+}
+
+.primary-action .ms-Button-label,
+.primary-action:hover .ms-Button-label,
+.primary-action:focus .ms-Button-label,
+.primary-action:active .ms-Button-label,
+.primary-action .ms-Button-icon,
+.primary-action:hover .ms-Button-icon,
+.primary-action:focus .ms-Button-icon,
+.primary-action:active .ms-Button-icon {
+  color: #ffffff;
+}
+
+.secondary-action:hover {
+  transform: none;
 }
