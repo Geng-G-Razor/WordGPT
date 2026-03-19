@@ -15,6 +15,7 @@ export default function App() {
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [generatedText, setGeneratedText] = React.useState<string>("");
+  const [helloCardExpanded, setHelloCardExpanded] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const key = localStorage.getItem("apiKey");
@@ -39,6 +40,11 @@ export default function App() {
   };
 
   const onClick = async () => {
+    if (!prompt.trim()) {
+      setError("请输入提示词后再生成内容。");
+      return;
+    }
+
     setGeneratedText("");
     setError("");
     setLoading(true);
@@ -83,13 +89,36 @@ export default function App() {
 
   return (
     <Container>
-      <section className="hero-card">
-        <div className="hero-copy">
-          <p className="eyebrow">wiseocean-gpt</p>
-          <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
-          <p className="hero-description">基于 `glm-5` 的写作助手，适合快速生成初稿、优化表达和补全段落。</p>
-        </div>
-        <div className="hero-pill">模型: glm-5</div>
+      <section className={`hero-card ${helloCardExpanded ? "is-expanded" : "is-collapsed"}`}>
+        <DefaultButton
+          className="hero-toggle"
+          iconProps={{ iconName: helloCardExpanded ? "ChevronUp" : "ChevronDown" }}
+          ariaLabel={helloCardExpanded ? "收起欢迎卡片" : "展开欢迎卡片"}
+          onClick={() => setHelloCardExpanded((value) => !value)}
+        />
+        {helloCardExpanded ? (
+          <div className="hero-topbar">
+            <div className="hero-copy">
+              <p className="eyebrow hero-eyebrow">wiseocean-gpt</p>
+              <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
+              <p className="hero-description">基于 `glm-5` 的写作助手，适合快速生成初稿、优化表达和补全段落。</p>
+            </div>
+          </div>
+        ) : (
+          <div className="hero-collapsed-row">
+            <div className="hero-collapsed-title">wiseocean-gpt</div>
+            <div className="hero-pill hero-pill-compact">
+              <span className="hero-pill-label">模型</span>
+              <span className="hero-pill-value">glm-5</span>
+            </div>
+          </div>
+        )}
+        {helloCardExpanded && (
+          <div className="hero-pill">
+            <span className="hero-pill-label">当前模型</span>
+            <span className="hero-pill-value">glm-5</span>
+          </div>
+        )}
       </section>
       {apiKey ? (
         <div className="panel">
@@ -107,12 +136,18 @@ export default function App() {
             rows={5}
             multiline={true}
             onChange={(_, newValue: string) => setPrompt(newValue || "")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                onClick();
+              }
+            }}
           ></TextField>
           <Center
             style={{
               marginTop: "18px",
               marginBottom: "14px",
-              justifyContent: "flex-start",
+              justifyContent: "flex-end",
             }}
           >
             <DefaultButton className="primary-action" iconProps={{ iconName: "Robot" }} onClick={onClick}>
