@@ -342,7 +342,7 @@ export default function App() {
           )}
           {loading && <ProgressIndicator className="loading-bar" label="正在生成内容..." />}
           {generatedText && (
-            <div className="result-card">
+            <div className="result-card result-card-expanded">
               <div className="result-header" style={{ display: "none" }}>
                 <h3 className="result-title">生成结果</h3>
                 <span className="result-meta">{generatedText.length} 字符</span>

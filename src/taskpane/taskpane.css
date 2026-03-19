@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
@@ -377,6 +377,12 @@ body {
   background: linear-gradient(180deg, rgba(245, 250, 255, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
+.result-card-expanded {
+  display: flex;
+  flex-direction: column;
+  height: (100vh - 230px);calc
+}
+
 .result-title {
   font-size: 16px;
   font-weight: 700;
@@ -395,10 +401,16 @@ body {
 
 .result-scroll {
   margin-top: 14px;
-  max-height: 280px;
+  max-height: calc(100vh - 230px);
   overflow-y: auto;
   padding-right: 4px;
   scroll-behavior: smooth;
+}
+
+.result-card-expanded .result-scroll {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
 }
 
 .message-wrap {
