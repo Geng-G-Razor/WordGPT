@@ -383,7 +383,7 @@ export default function App() {
         </div>
       ) : apiKey && !isEditingApiKey && isResultMode ? (
         <div className="panel">
-          <div className="panel-header">
+          <div className="panel-header" style={{display: "none"}}>
             <div>
               <p className="eyebrow">内容生成</p>
               <h2 className="panel-title">{loading ? "正在生成内容" : "生成结果"}</h2>
@@ -392,7 +392,7 @@ export default function App() {
           </div>
           <Center
             style={{
-              marginTop: "18px",
+              marginTop: "0px",
               marginBottom: "14px",
               justifyContent: "space-between",
             }}
@@ -420,7 +420,7 @@ export default function App() {
           {loading && <ProgressIndicator className="loading-bar" label="正在生成内容..." />}
           {generatedText && (
             <div className="result-card">
-              <div className="result-header">
+              <div className="result-header" style={{ display: "none" }}>
                 <h3 className="result-title">生成结果</h3>
                 <span className="result-meta">{generatedText.length} 字符</span>
               </div>
