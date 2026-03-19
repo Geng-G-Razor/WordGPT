@@ -419,7 +419,7 @@ export default function App() {
           )}
           {loading && <ProgressIndicator className="loading-bar" label="正在生成内容..." />}
           {generatedText && (
-            <div className="result-card">
+            <div className="result-card result-card-expanded">
               <div className="result-header" style={{ display: "none" }}>
                 <h3 className="result-title">生成结果</h3>
                 <span className="result-meta">{generatedText.length} 字符</span>
@@ -427,6 +427,20 @@ export default function App() {
               <div className="result-scroll" ref={resultScrollRef}>
                 <p className="result-text">{generatedText}</p>
               </div>
+              <Center
+                style={{
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                  marginTop: "16px",
+                }}
+              >
+                <DefaultButton className="secondary-action" iconProps={{ iconName: "Add" }} onClick={onInsert}>
+                  插入到文档
+                </DefaultButton>
+                <DefaultButton className="secondary-action" iconProps={{ iconName: "Copy" }} onClick={onCopy}>
+                  复制内容
+                </DefaultButton>
+              </Center>
             </div>
           )}
         </div>
