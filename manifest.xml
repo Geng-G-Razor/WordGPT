@@ -7,7 +7,7 @@
   <Version>1.0.0.0</Version>
   <ProviderName>Contoso</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="WordGPT" />
+  <DisplayName DefaultValue="wiseocean-gpt" />
   <Description
     DefaultValue="Adding the power of ChatGPT to Word for the ultimate writing experience!" />
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png" />
@@ -78,13 +78,13 @@
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Get started with WordGPT!" />
+        <bt:String id="GetStarted.Title" DefaultValue="Get started with wiseocean-gpt!" />
         <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group" />
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Open WordGPT" />
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Open wiseocean-gpt" />
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="GetStarted.Description"
-          DefaultValue="To start using WordGPT, please provide your OpenAI API key and save it." />
+          DefaultValue="To start using wiseocean-gpt, please provide your API key and save it." />
         <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane" />
       </bt:LongStrings>
     </Resources>
