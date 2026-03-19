@@ -31,6 +31,7 @@ export default function App() {
   const [apiKey, setApiKey] = React.useState<string>("");
   const [draftApiKey, setDraftApiKey] = React.useState<string>("");
   const [isEditingApiKey, setIsEditingApiKey] = React.useState<boolean>(false);
+  const [isResultMode, setIsResultMode] = React.useState<boolean>(false);
   const [prompt, setPrompt] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -67,6 +68,7 @@ export default function App() {
   const resetApiKey = () => {
     setDraftApiKey(apiKey);
     setIsEditingApiKey(true);
+    setIsResultMode(false);
     setError("");
   };
 
@@ -86,6 +88,7 @@ export default function App() {
       return;
     }
 
+    setIsResultMode(true);
     setGeneratedText("");
     setStreamStage("");
     if (STREAM_DEBUG_ENABLED) {
@@ -249,51 +252,56 @@ export default function App() {
     navigator.clipboard.writeText(generatedText);
   };
 
+  const showComposer = apiKey && !isEditingApiKey && !isResultMode;
+  const showHeroCard = !isResultMode;
+
   return (
     <Container>
-      <section className={`hero-card ${helloCardExpanded ? "is-expanded" : "is-collapsed"}`}>
-        <div className="hero-actions">
-          {apiKey && !isEditingApiKey && (
+      {showHeroCard && (
+        <section className={`hero-card ${helloCardExpanded ? "is-expanded" : "is-collapsed"}`}>
+          <div className="hero-actions">
+            {apiKey && !isEditingApiKey && (
+              <DefaultButton
+                className="hero-toggle hero-icon-button"
+                iconProps={{ iconName: "Edit" }}
+                ariaLabel="重新填写 Key"
+                title="重新填写 Key"
+                onClick={resetApiKey}
+              />
+            )}
             <DefaultButton
               className="hero-toggle hero-icon-button"
-              iconProps={{ iconName: "Edit" }}
-              ariaLabel="重新填写 Key"
-              title="重新填写 Key"
-              onClick={resetApiKey}
+              iconProps={{ iconName: helloCardExpanded ? "ChevronUp" : "ChevronDown" }}
+              ariaLabel={helloCardExpanded ? "收起欢迎卡片" : "展开欢迎卡片"}
+              onClick={() => setHelloCardExpanded((value) => !value)}
             />
-          )}
-          <DefaultButton
-            className="hero-toggle hero-icon-button"
-            iconProps={{ iconName: helloCardExpanded ? "ChevronUp" : "ChevronDown" }}
-            ariaLabel={helloCardExpanded ? "收起欢迎卡片" : "展开欢迎卡片"}
-            onClick={() => setHelloCardExpanded((value) => !value)}
-          />
-        </div>
-        {helloCardExpanded ? (
-          <div className="hero-topbar">
-            <div className="hero-copy">
-              <p className="eyebrow hero-eyebrow">wiseocean-gpt</p>
-              <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
-              <p className="hero-description">基于 `Pro/zai-org/GLM-5` 的写作助手，适合快速生成初稿、优化表达和补全段落。</p>
-            </div>
           </div>
-        ) : (
-          <div className="hero-collapsed-row">
-            <div className="hero-collapsed-title">wiseocean-gpt</div>
-            <div className="hero-pill hero-pill-compact">
-              <span className="hero-pill-label">模型</span>
+          {helloCardExpanded ? (
+            <div className="hero-topbar">
+              <div className="hero-copy">
+                <p className="eyebrow hero-eyebrow">wiseocean-gpt</p>
+                <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
+                <p className="hero-description">基于 `Pro/zai-org/GLM-5` 的写作助手，适合快速生成初稿、优化表达和补全段落。</p>
+              </div>
+            </div>
+          ) : (
+            <div className="hero-collapsed-row">
+              <div className="hero-collapsed-title">wiseocean-gpt</div>
+              <div className="hero-pill hero-pill-compact">
+                <span className="hero-pill-label">模型</span>
+                <span className="hero-pill-value">Pro/zai-org/GLM-5</span>
+              </div>
+            </div>
+          )}
+          {helloCardExpanded && (
+            <div className="hero-pill">
+              <span className="hero-pill-label">当前模型</span>
               <span className="hero-pill-value">Pro/zai-org/GLM-5</span>
             </div>
-          </div>
-        )}
-        {helloCardExpanded && (
-          <div className="hero-pill">
-            <span className="hero-pill-label">当前模型</span>
-            <span className="hero-pill-value">Pro/zai-org/GLM-5</span>
-          </div>
-        )}
-      </section>
-      {apiKey && !isEditingApiKey ? (
+          )}
+        </section>
+      )}
+      {showComposer ? (
         <div className="panel">
           <div className="panel-header">
             <div>
@@ -335,7 +343,7 @@ export default function App() {
           {loading && <ProgressIndicator className="loading-bar" label="正在生成内容..." />}
           {generatedText && (
             <div className="result-card">
-              <div className="result-header">
+              <div className="result-header" style={{ display: "none" }}>
                 <h3 className="result-title">生成结果</h3>
                 <span className="result-meta">{generatedText.length} 字符</span>
               </div>
@@ -370,6 +378,55 @@ export default function App() {
                 rows={12}
                 readOnly={true}
               />
+            </div>
+          )}
+        </div>
+      ) : apiKey && !isEditingApiKey && isResultMode ? (
+        <div className="panel">
+          <div className="panel-header">
+            <div>
+              <p className="eyebrow">内容生成</p>
+              <h2 className="panel-title">{loading ? "正在生成内容" : "生成结果"}</h2>
+            </div>
+            <span className="status-badge">{loading ? "进行中" : "已完成"}</span>
+          </div>
+          <Center
+            style={{
+              marginTop: "18px",
+              marginBottom: "14px",
+              justifyContent: "space-between",
+            }}
+          >
+            <DefaultButton
+              iconProps={{ iconName: "Back" }}
+              onClick={() => {
+                setIsResultMode(false);
+                setStreamStage("");
+              }}
+            >
+              返回编辑
+            </DefaultButton>
+            {!loading && (
+              <DefaultButton className="primary-action" iconProps={{ iconName: "Robot" }} onClick={onClick}>
+                重新生成
+              </DefaultButton>
+            )}
+          </Center>
+          {streamStage && (
+            <div className="message-wrap" style={{ marginTop: "12px" }}>
+              <MessageBar messageBarType={MessageBarType.info}>{streamStage}</MessageBar>
+            </div>
+          )}
+          {loading && <ProgressIndicator className="loading-bar" label="正在生成内容..." />}
+          {generatedText && (
+            <div className="result-card">
+              <div className="result-header">
+                <h3 className="result-title">生成结果</h3>
+                <span className="result-meta">{generatedText.length} 字符</span>
+              </div>
+              <div className="result-scroll" ref={resultScrollRef}>
+                <p className="result-text">{generatedText}</p>
+              </div>
             </div>
           )}
         </div>
