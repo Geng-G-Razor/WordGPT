@@ -49,7 +49,7 @@ export default function App() {
           {
             role: "system",
             content:
-              "You are a helpful writing assistant for Microsoft Word. Generate polished, useful text in the same language as the user's request unless they ask otherwise.",
+              "你是一个用于 Microsoft Word 的智能写作助手。请使用与用户请求相同的语言生成清晰、自然、可直接使用的内容，除非用户明确要求使用其他语言。",
           },
           {
             role: "user",
@@ -62,7 +62,7 @@ export default function App() {
 
       setGeneratedText(completion.data.choices[0]?.message?.content?.trim() || "");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to generate text.";
+      const message = error instanceof Error ? error.message : "生成内容失败，请稍后重试。";
       setError(message);
     } finally {
       setLoading(false);
@@ -83,10 +83,26 @@ export default function App() {
 
   return (
     <Container>
+      <section className="hero-card">
+        <div className="hero-copy">
+          <p className="eyebrow">wiseocean-gpt</p>
+          <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
+          <p className="hero-description">基于 `glm-5` 的写作助手，适合快速生成初稿、优化表达和补全段落。</p>
+        </div>
+        <div className="hero-pill">模型: glm-5</div>
+      </section>
       {apiKey ? (
-        <>
+        <div className="panel">
+          <div className="panel-header">
+            <div>
+              <p className="eyebrow">内容生成</p>
+              <h2 className="panel-title">告诉我你想写什么</h2>
+            </div>
+            <span className="status-badge">已连接</span>
+          </div>
           <TextField
-            placeholder="Enter prompt here"
+            className="app-input"
+            placeholder="请输入你的提示词"
             value={prompt}
             rows={5}
             multiline={true}
@@ -94,39 +110,48 @@ export default function App() {
           ></TextField>
           <Center
             style={{
-              marginTop: "10px",
-              marginBottom: "10px",
+              marginTop: "18px",
+              marginBottom: "14px",
+              justifyContent: "flex-start",
             }}
           >
-            <DefaultButton iconProps={{ iconName: "Robot" }} onClick={onClick}>
-              Generate
+            <DefaultButton className="primary-action" iconProps={{ iconName: "Robot" }} onClick={onClick}>
+              生成内容
             </DefaultButton>
           </Center>
-          {loading && <ProgressIndicator label="Generating text..." />}
+          {loading && <ProgressIndicator className="loading-bar" label="正在生成内容..." />}
           {generatedText && (
-            <div>
-              <p
+            <div className="result-card">
+              <div className="result-header">
+                <h3 className="result-title">生成结果</h3>
+                <span className="result-meta">{generatedText.length} 字符</span>
+              </div>
+              <p className="result-text">{generatedText}</p>
+              <Center
                 style={{
-                  textAlign: "justify",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                  marginTop: "16px",
                 }}
               >
-                {generatedText}
-              </p>
-              <Center>
-                <DefaultButton iconProps={{ iconName: "Add" }} onClick={onInsert}>
-                  Insert text
+                <DefaultButton className="secondary-action" iconProps={{ iconName: "Add" }} onClick={onInsert}>
+                  插入到文档
                 </DefaultButton>
-                <DefaultButton iconProps={{ iconName: "Copy" }} onClick={onCopy}>
-                  Copy text
+                <DefaultButton className="secondary-action" iconProps={{ iconName: "Copy" }} onClick={onCopy}>
+                  复制内容
                 </DefaultButton>
               </Center>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <Login onSave={saveApiKey} />
       )}
-      {error && <MessageBar messageBarType={MessageBarType.error}>{error}</MessageBar>}
+      {error && (
+        <div className="message-wrap">
+          <MessageBar messageBarType={MessageBarType.error}>{error}</MessageBar>
+        </div>
+      )}
     </Container>
   );
 }

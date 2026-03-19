@@ -5,13 +5,5 @@ interface ContainerProps {
 }
 
 export default function Container({ children }: ContainerProps) {
-  return (
-    <div
-      style={{
-        padding: "10px",
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div className="app-shell">{children}</div>;
 }
