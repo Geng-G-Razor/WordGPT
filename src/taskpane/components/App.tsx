@@ -252,12 +252,23 @@ export default function App() {
   return (
     <Container>
       <section className={`hero-card ${helloCardExpanded ? "is-expanded" : "is-collapsed"}`}>
-        <DefaultButton
-          className="hero-toggle"
-          iconProps={{ iconName: helloCardExpanded ? "ChevronUp" : "ChevronDown" }}
-          ariaLabel={helloCardExpanded ? "收起欢迎卡片" : "展开欢迎卡片"}
-          onClick={() => setHelloCardExpanded((value) => !value)}
-        />
+        <div className="hero-actions">
+          {apiKey && !isEditingApiKey && (
+            <DefaultButton
+              className="hero-toggle hero-icon-button"
+              iconProps={{ iconName: "Edit" }}
+              ariaLabel="重新填写 Key"
+              title="重新填写 Key"
+              onClick={resetApiKey}
+            />
+          )}
+          <DefaultButton
+            className="hero-toggle hero-icon-button"
+            iconProps={{ iconName: helloCardExpanded ? "ChevronUp" : "ChevronDown" }}
+            ariaLabel={helloCardExpanded ? "收起欢迎卡片" : "展开欢迎卡片"}
+            onClick={() => setHelloCardExpanded((value) => !value)}
+          />
+        </div>
         {helloCardExpanded ? (
           <div className="hero-topbar">
             <div className="hero-copy">
@@ -309,12 +320,9 @@ export default function App() {
             style={{
               marginTop: "18px",
               marginBottom: "14px",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
             }}
           >
-            <DefaultButton iconProps={{ iconName: "Edit" }} onClick={resetApiKey}>
-              重新填写 Key
-            </DefaultButton>
             <DefaultButton className="primary-action" iconProps={{ iconName: "Robot" }} onClick={onClick}>
               生成内容
             </DefaultButton>
