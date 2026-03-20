@@ -1,4 +1,16 @@
 {
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
   "plugins": ["office-addins"],
-  "extends": ["plugin:office-addins/react"]
+  "extends": ["plugin:office-addins/react"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "no-undef": "off"
+      }
+    }
+  ]
 }

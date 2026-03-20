@@ -29,9 +29,11 @@ export default function Login({ onSave, onBack, initialToken = "" }: LoginProps)
         style={{
           width: "100%",
         }}
+        type="password"
         value={token}
         onChange={(_, newValue: string) => setToken(newValue || "")}
         placeholder={"请输入你的 SiliconFlow API Key"}
+        canRevealPassword
       />
       <Center
         style={{

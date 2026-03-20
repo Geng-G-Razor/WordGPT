@@ -3,7 +3,7 @@ import { DefaultButton, MessageBar, MessageBarType, ProgressIndicator, TextField
 import Center from "./Center";
 import Container from "./Container";
 import Login from "./Login";
-/* global Word, localStorage, navigator */
+/* global Word */
 
 const OPENAI_BASE_PATH = "/api";
 const API_KEY_STORAGE_KEY = "siliconflowApiKey";
@@ -70,7 +70,7 @@ export default function App() {
     resultScrollRef.current.scrollTop = resultScrollRef.current.scrollHeight;
   }, [generatedText]);
 
-  const saveApiKey = (key) => {
+  const saveApiKey = (key: string) => {
     setApiKey(key);
     setDraftApiKey(key);
     setIsEditingApiKey(false);
@@ -173,7 +173,7 @@ export default function App() {
       const startedAt = performance.now();
       let lastReadAt = startedAt;
 
-      while (true) {
+      for (;;) {
         const { done, value } = await reader.read();
         chunkCount += 1;
         const now = performance.now();
@@ -274,7 +274,12 @@ export default function App() {
   };
 
   const onCopy = async () => {
-    navigator.clipboard.writeText(generatedText);
+    try {
+      await navigator.clipboard.writeText(generatedText);
+    } catch (copyError) {
+      const message = copyError instanceof Error ? copyError.message : "复制失败，请手动复制生成内容。";
+      setError(message);
+    }
   };
 
   const showComposer = apiKey && !isEditingApiKey && !isResultMode;
@@ -312,7 +317,11 @@ export default function App() {
           ) : (
             <div className="hero-collapsed-row">
               <div className="hero-collapsed-title">wiseocean-gpt</div>
-              <div className="hero-pill hero-pill-compact hero-pill-clickable" onClick={cycleModel} title="点击切换模型">
+              <div
+                className="hero-pill hero-pill-compact hero-pill-clickable"
+                onClick={cycleModel}
+                title="点击切换模型"
+              >
                 <span className="hero-pill-label">模型</span>
                 <span className="hero-pill-value">{currentModelLabel}</span>
               </div>
@@ -397,18 +406,13 @@ export default function App() {
                 <h3 className="result-title">流式调试日志</h3>
                 <span className="result-meta">{debugLogs.length} 条</span>
               </div>
-              <TextField
-                value={debugLogs.join("\n")}
-                multiline={true}
-                rows={12}
-                readOnly={true}
-              />
+              <TextField value={debugLogs.join("\n")} multiline={true} rows={12} readOnly={true} />
             </div>
           )}
         </div>
       ) : apiKey && !isEditingApiKey && isResultMode ? (
         <div className="panel">
-          <div className="panel-header" style={{display: "none"}}>
+          <div className="panel-header" style={{ display: "none" }}>
             <div>
               <p className="eyebrow">内容生成</p>
               <h2 className="panel-title">{loading ? "正在生成内容" : "生成结果"}</h2>
@@ -470,7 +474,11 @@ export default function App() {
           )}
         </div>
       ) : (
-        <Login onSave={saveApiKey} onBack={apiKey ? () => setIsEditingApiKey(false) : undefined} initialToken={draftApiKey} />
+        <Login
+          onSave={saveApiKey}
+          onBack={apiKey ? () => setIsEditingApiKey(false) : undefined}
+          initialToken={draftApiKey}
+        />
       )}
       {error && (
         <div className="message-wrap">

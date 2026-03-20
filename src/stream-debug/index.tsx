@@ -1,4 +1,11 @@
-import { DefaultButton, MessageBar, MessageBarType, ProgressIndicator, TextField, ThemeProvider } from "@fluentui/react";
+import {
+  DefaultButton,
+  MessageBar,
+  MessageBarType,
+  ProgressIndicator,
+  TextField,
+  ThemeProvider,
+} from "@fluentui/react";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -107,7 +114,7 @@ function StreamDebugPage() {
       let reasoningChars = 0;
       let contentChars = 0;
 
-      while (true) {
+      for (;;) {
         const { done, value } = await reader.read();
         chunkCount += 1;
         const now = performance.now();
@@ -224,10 +231,13 @@ function StreamDebugPage() {
               boxShadow: "0 18px 40px rgba(26, 71, 110, 0.1)",
             }}
           >
-            <div style={{ fontSize: "12px", opacity: 0.75, letterSpacing: "0.08em", fontWeight: 700 }}>STREAM DEBUG</div>
+            <div style={{ fontSize: "12px", opacity: 0.75, letterSpacing: "0.08em", fontWeight: 700 }}>
+              STREAM DEBUG
+            </div>
             <h1 style={{ margin: "8px 0 10px", fontSize: "28px", lineHeight: 1.2 }}>最小独立流式测试页</h1>
             <p style={{ margin: 0, maxWidth: "760px", lineHeight: 1.7, opacity: 0.9 }}>
-              用同一套请求代码分别在普通浏览器和 Word taskpane 中打开本页，对比 `reader.read()` 次数、到达节奏和正文刷新效果。
+              用同一套请求代码分别在普通浏览器和 Word taskpane 中打开本页，对比 `reader.read()`
+              次数、到达节奏和正文刷新效果。
             </p>
           </section>
 
@@ -242,7 +252,13 @@ function StreamDebugPage() {
               gap: "12px",
             }}
           >
-            <TextField label="API Key" type="password" value={apiKey} onChange={(_, value) => setApiKey(value || "")} canRevealPassword />
+            <TextField
+              label="API Key"
+              type="password"
+              value={apiKey}
+              onChange={(_, value) => setApiKey(value || "")}
+              canRevealPassword
+            />
             <TextField
               label="System Prompt"
               value={systemPrompt}

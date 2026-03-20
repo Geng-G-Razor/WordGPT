@@ -16,6 +16,11 @@
     "url": "https://github.com/filippofinke/wordgpt"
   },
   "license": "MIT",
+  "packageManager": "pnpm@10.11.1",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "config": {
     "app_to_debug": "word",
     "app_type_to_debug": "desktop",
@@ -24,6 +29,7 @@
   "scripts": {
     "build": "webpack --mode production && cp index.html dist/index.html",
     "build:dev": "webpack --mode development",
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build",
     "dev-server": "webpack serve --mode development",
     "lint": "office-addin-lint check",
     "lint:fix": "office-addin-lint fix",
@@ -32,6 +38,7 @@
     "start:desktop": "office-addin-debugging start manifest.xml desktop",
     "start:web": "office-addin-debugging start manifest.xml web",
     "stop": "office-addin-debugging stop manifest.xml",
+    "typecheck": "tsc --noEmit",
     "validate": "office-addin-manifest validate manifest.xml",
     "watch": "webpack --mode development --watch"
   },
@@ -40,7 +47,6 @@
     "@fluentui/font-icons-mdl2": "^8.5.61",
     "core-js": "^3.9.1",
     "es6-promise": "^4.2.8",
-    "openai": "^3.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.7"

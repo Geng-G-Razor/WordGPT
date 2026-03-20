@@ -3,28 +3,19 @@
  * See LICENSE in the project root for license information.
  */
 
-/* global global, Office, self, window */
+/* global global, Office */
 
 Office.onReady(() => {
   // If needed, Office.js is ready to be called
 });
 
 /**
- * Shows a notification when the add-in command is executed.
+ * FunctionFile entry kept for Office command compatibility.
+ * The current ribbon button opens the task pane directly via manifest.xml,
+ * so this function intentionally performs no document mutation.
  * @param event
  */
 function action(event: Office.AddinCommands.Event) {
-  const message: Office.NotificationMessageDetails = {
-    type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-    message: "Performed action.",
-    icon: "Icon.80x80",
-    persistent: true,
-  };
-
-  // Show a notification message
-  Office.context.mailbox.item.notificationMessages.replaceAsync("action", message);
-
-  // Be sure to indicate when the add-in command function is complete
   event.completed();
 }
 
