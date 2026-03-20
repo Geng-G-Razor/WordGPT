@@ -6,11 +6,19 @@ import Login from "./Login";
 /* global Word, localStorage, navigator */
 
 const OPENAI_BASE_PATH = "/api";
-const OPENAI_MODEL = "Pro/zai-org/GLM-5";
 const API_KEY_STORAGE_KEY = "siliconflowApiKey";
+const MODEL_STORAGE_KEY = "siliconflowModel";
 const STREAM_DEBUG_ENABLED = false;
 const SYSTEM_PROMPT =
   "你是一个用于 Microsoft Word 的智能写作助手。请使用与用户请求相同的语言生成清晰、自然、可直接使用的内容，除非用户明确要求使用其他语言。";
+const MODEL_OPTIONS = [
+  { key: "Pro/deepseek-ai/DeepSeek-V3.2", text: "DeepSeek V3.2" },
+  { key: "Pro/zai-org/GLM-5", text: "GLM-5" },
+  { key: "Pro/moonshotai/Kimi-K2.5", text: "Kimi K2.5" },
+  { key: "Pro/MiniMaxAI/MiniMax-M2.5", text: "MiniMax M2.5" },
+  { key: "Qwen/Qwen3.5-397B-A17B", text: "Qwen3.5 397B" },
+];
+const DEFAULT_MODEL = "Pro/zai-org/GLM-5";
 
 type DebugLevel = "info" | "warn" | "error";
 
@@ -32,6 +40,7 @@ export default function App() {
   const [draftApiKey, setDraftApiKey] = React.useState<string>("");
   const [isEditingApiKey, setIsEditingApiKey] = React.useState<boolean>(false);
   const [isResultMode, setIsResultMode] = React.useState<boolean>(false);
+  const [selectedModel, setSelectedModel] = React.useState<string>(DEFAULT_MODEL);
   const [prompt, setPrompt] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -43,9 +52,13 @@ export default function App() {
 
   React.useEffect(() => {
     const key = localStorage.getItem(API_KEY_STORAGE_KEY);
+    const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
     if (key) {
       setApiKey(key);
       setDraftApiKey(key);
+    }
+    if (savedModel && MODEL_OPTIONS.some((option) => option.key === savedModel)) {
+      setSelectedModel(savedModel);
     }
   }, []);
 
@@ -70,6 +83,18 @@ export default function App() {
     setIsEditingApiKey(true);
     setIsResultMode(false);
     setError("");
+  };
+
+  const currentModelLabel = React.useMemo(() => {
+    return MODEL_OPTIONS.find((option) => option.key === selectedModel)?.text || selectedModel;
+  }, [selectedModel]);
+
+  const cycleModel = () => {
+    const currentIndex = MODEL_OPTIONS.findIndex((option) => option.key === selectedModel);
+    const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % MODEL_OPTIONS.length;
+    const nextModel = String(MODEL_OPTIONS[nextIndex].key);
+    setSelectedModel(nextModel);
+    localStorage.setItem(MODEL_STORAGE_KEY, nextModel);
   };
 
   const appendDebugLog = React.useCallback((message: string, level: DebugLevel = "info") => {
@@ -107,9 +132,9 @@ export default function App() {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: OPENAI_MODEL,
+          model: selectedModel,
           stream: true,
-          enable_thinking: false,
+          ...(selectedModel === "Pro/zai-org/GLM-5" ? { enable_thinking: false } : {}),
           messages: [
             {
               role: "system",
@@ -281,22 +306,22 @@ export default function App() {
               <div className="hero-copy">
                 <p className="eyebrow hero-eyebrow">wiseocean-gpt</p>
                 <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
-                <p className="hero-description">基于 `Pro/zai-org/GLM-5` 的写作助手，适合快速生成初稿、优化表达和补全段落。</p>
+                <p className="hero-description">支持多模型切换，适合快速生成初稿、优化表达和补全段落。</p>
               </div>
             </div>
           ) : (
             <div className="hero-collapsed-row">
               <div className="hero-collapsed-title">wiseocean-gpt</div>
-              <div className="hero-pill hero-pill-compact">
+              <div className="hero-pill hero-pill-compact hero-pill-clickable" onClick={cycleModel} title="点击切换模型">
                 <span className="hero-pill-label">模型</span>
-                <span className="hero-pill-value">Pro/zai-org/GLM-5</span>
+                <span className="hero-pill-value">{currentModelLabel}</span>
               </div>
             </div>
           )}
           {helloCardExpanded && (
-            <div className="hero-pill">
+            <div className="hero-pill hero-pill-clickable" onClick={cycleModel} title="点击切换模型">
               <span className="hero-pill-label">当前模型</span>
-              <span className="hero-pill-value">Pro/zai-org/GLM-5</span>
+              <span className="hero-pill-value">{currentModelLabel}</span>
             </div>
           )}
         </section>
