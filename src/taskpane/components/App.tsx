@@ -19,6 +19,12 @@ const MODEL_OPTIONS = [
   { key: "Qwen/Qwen3.5-397B-A17B", text: "Qwen3.5 397B" },
 ];
 const DEFAULT_MODEL = "Pro/zai-org/GLM-5";
+const QUICK_PROMPTS = [
+  "帮我润色下面这段中文，让表达更自然专业。",
+  "写一封语气友好但坚定的英文商务邮件。",
+  "把这段内容扩写成结构清晰的正式说明。",
+  "根据这段文字提炼 3 条简洁结论。",
+];
 
 type DebugLevel = "info" | "warn" | "error";
 
@@ -285,6 +291,41 @@ export default function App() {
   const showComposer = apiKey && !isEditingApiKey && !isResultMode;
   const showHeroCard = !isResultMode;
 
+  const applyPrompt = (value: string) => {
+    setPrompt(value);
+    setError("");
+  };
+
+  const renderEmptyState = (mode: "compose" | "result") => (
+    <div className={`result-card result-empty-state ${mode === "result" ? "result-empty-state-compact" : ""}`}>
+      <div className="result-empty-orb" />
+      <div className="result-empty-header">
+        <p className="eyebrow">结果预览</p>
+        <h3 className="result-title">生成内容后会显示在这里</h3>
+        <p className="result-empty-description">
+          你可以用它来写邮件、润色段落、扩写提纲，或把零散想法整理成更完整的表达。
+        </p>
+      </div>
+      <div className="result-empty-grid">
+        <div className="result-empty-tip">
+          <span className="result-empty-tip-label">当前模型</span>
+          <strong>{currentModelLabel}</strong>
+        </div>
+        <div className="result-empty-tip">
+          <span className="result-empty-tip-label">快捷操作</span>
+          <strong>Enter 发送，Shift + Enter 换行</strong>
+        </div>
+      </div>
+      <div className="prompt-chip-list">
+        {QUICK_PROMPTS.map((item) => (
+          <button key={item} type="button" className="prompt-chip" onClick={() => applyPrompt(item)}>
+            {item}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <Container>
       {showHeroCard && (
@@ -309,14 +350,14 @@ export default function App() {
           {helloCardExpanded ? (
             <div className="hero-topbar">
               <div className="hero-copy">
-                <p className="eyebrow hero-eyebrow">wiseocean-gpt</p>
+                <p className="eyebrow hero-eyebrow">wiseOcean word 小助手</p>
                 <h1 className="hero-title">在 Word 里更自然地写作、润色与扩展内容</h1>
                 <p className="hero-description">支持多模型切换，适合快速生成初稿、优化表达和补全段落。</p>
               </div>
             </div>
           ) : (
             <div className="hero-collapsed-row">
-              <div className="hero-collapsed-title">wiseocean-gpt</div>
+              <div className="hero-collapsed-title">wiseOcean word 小助手</div>
               <div
                 className="hero-pill hero-pill-compact hero-pill-clickable"
                 onClick={cycleModel}
@@ -400,6 +441,7 @@ export default function App() {
               </Center>
             </div>
           )}
+          {!loading && !generatedText && renderEmptyState("compose")}
           {STREAM_DEBUG_ENABLED && (
             <div className="result-card" style={{ marginTop: "16px" }}>
               <div className="result-header">
@@ -472,6 +514,7 @@ export default function App() {
               </Center>
             </div>
           )}
+          {!loading && !generatedText && renderEmptyState("result")}
         </div>
       ) : (
         <Login
